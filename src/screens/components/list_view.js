@@ -11,11 +11,16 @@ class ListView extends Component {
 	    };
     }
 
-	componentDidMount() {
-		client.get("/").then((response) => {
-			this.setState({ data: response.data });
-		});
-	}
+    async componentDidMount() {
+        try {
+          const response = await client.get("/");
+          if (!response.ok) {
+            this.setState({ data: response.data });
+          }
+        }catch (error) {
+          console.log(error);
+        }
+    }
 
     render() {
     const { data } = this.state;  
@@ -28,6 +33,7 @@ class ListView extends Component {
       />
       <Text style={styles.baseText}>NineHealth</Text>
       <Text style={styles.newText}>{mytext}</Text>
+      <Text>{data.length} Pizzerias</Text>
       <FlatList
           data={data}
           keyExtractor={(item) => item.id.toString()}
